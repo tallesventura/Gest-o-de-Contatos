@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+
+            <EditText
+                android:id="@+id/add_contact_nome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/nome_hint"
+                android:layout_alignParentTop="true"
+                android:inputType="textPersonName"/>
+
+            <EditText
+                android:id="@+id/add_contact_telefone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/telefone_hint"
+                android:layout_below="@id/add_contact_nome"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/add_contact_tipo_telefone"
+                android:layout_toStartOf="@+id/add_contact_tipo_telefone"
+                android:inputType="phone" />
+
+            <Spinner
+                android:id="@+id/add_contact_tipo_telefone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_contact_nome"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="7dp"/>
+
+            <TextView
+                android:id="@+id/add_contact_txtSexo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sexo"
+                android:textColor="@color/preto"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"
+                android:layout_below="@id/add_contact_telefone" />
+
+            <View
+                android:id="@+id/add_contact_linha_sexo"
+                android:layout_width="match_parent"
+                android:background="@color/cinza_400"
+                android:layout_height="2dp"
+                android:layout_marginTop="3dp"
+                android:layout_below="@id/add_contact_txtSexo" />
+
+            <RadioGroup
+                android:id="@+id/add_contact_radioSexo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="7dp"
+                android:layout_below="@id/add_contact_linha_sexo">
+                <RadioButton
+                    android:id="@+id/add_contact_masculino"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/masculino"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginEnd="15dp"/>
+                <RadioButton
+                    android:id="@+id/add_contact_feminino"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feminino" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/add_contact_txtEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:textColor="@color/preto"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"
+                android:layout_below="@id/add_contact_radioSexo" />
+
+            <View
+                android:id="@+id/add_contact_linha_email"
+                android:layout_width="match_parent"
+                android:background="@color/cinza_400"
+                android:layout_height="2dp"
+                android:layout_marginTop="3dp"
+                android:layout_below="@id/add_contact_txtEmail" />
+
+            <EditText
+                android:id="@+id/add_contact_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/email_hint"
+                android:layout_below="@id/add_contact_linha_email"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/add_contact_tipo_email"
+                android:layout_toStartOf="@+id/add_contact_tipo_email"
+                android:inputType="textEmailAddress" />
+
+            <Spinner
+                android:id="@+id/add_contact_tipo_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_contact_linha_email"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="7dp"/>
+
+            <TextView
+                android:id="@+id/add_contact_txtAfinidade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/afinidade"
+                android:textColor="@color/preto"
+                android:textStyle="bold"
+                android:layout_marginTop="7dp"
+                android:layout_below="@id/add_contact_email" />
+
+            <View
+                android:id="@+id/add_contact_linha_afinidade"
+                android:layout_width="match_parent"
+                android:background="@color/cinza_400"
+                android:layout_height="2dp"
+                android:layout_marginTop="3dp"
+                android:layout_below="@id/add_contact_txtAfinidade" />
+
+            <RatingBar
+                android:id="@+id/add_contact_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:numStars="3"
+                android:rating="2.5"
+                android:layout_below="@id/add_contact_linha_afinidade" />
+
+            <Button
+                android:id="@+id/add_contact_salvar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/salvar"
+                android:layout_marginTop="7dp"
+                android:layout_below="@+id/add_contact_rating"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/add_contact_cancelar"
+                android:layout_toStartOf="@+id/add_contact_cancelar" />
+
+            <Button
+                android:id="@+id/add_contact_cancelar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancelar"
+                android:layout_marginTop="7dp"
+                android:layout_below="@+id/add_contact_rating"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>
