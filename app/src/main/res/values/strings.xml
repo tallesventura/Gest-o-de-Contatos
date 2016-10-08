@@ -22,4 +22,15 @@
     <string name="email_hint">Email</string>
     <string name="salvar">SALVAR</string>
     <string name="cancelar">CANCELAR</string>
+    <string name="action_search">Pesquisar</string>
+    <string name="action_settings">Configurações</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_save">Salvar</string>
+    <string name="home">Tela principal</string>
+    <string name="all_contacts">Todos os contatos</string>
+    <string name="favorites">Favoritos</string>
+    <string name="developed_by">Desenvolvido por</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

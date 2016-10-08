@@ -2,6 +2,8 @@ package com.talles.android.gestaodecontatos;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -17,7 +19,11 @@ public class AddContactActivity  extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout. activity_add_contact);
+        setContentView(R.layout.activity_add_contact);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+
 
         this.spinnerTelTypes = (Spinner) findViewById(R.id.add_contact_tipo_telefone);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
@@ -33,5 +39,12 @@ public class AddContactActivity  extends AppCompatActivity{
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.spinnerEmailTypes.setAdapter(adapter);
 
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_addcontact, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

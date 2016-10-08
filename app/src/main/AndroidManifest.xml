@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.talles.android.gestaodecontatos">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,9 +17,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddContactActivity"/>
+        <activity android:name=".AddContactActivity" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="9ab5527c4da04f24b381ea6b77dcdb3332767181" />
 
     </application>
 
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
