@@ -23,6 +23,7 @@
             android:name="io.fabric.ApiKey"
             android:value="9ab5527c4da04f24b381ea6b77dcdb3332767181" />
 
+        <activity android:name=".SearchContactActivity"></activity>
     </application>
 
 </manifest>

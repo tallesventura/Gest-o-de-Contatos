@@ -1,10 +1,15 @@
 package com.talles.android.gestaodecontatos;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 /**
@@ -38,6 +43,46 @@ public class AddContactActivity  extends AppCompatActivity{
                 R.array.email_types, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.spinnerEmailTypes.setAdapter(adapter);
+
+        Button btnSave = (Button) findViewById(R.id.add_contact_salvar);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(AddContactActivity.this).setMessage("Contato salvo com sucesso!").show();
+            }
+        });
+
+        Button btnCancel = (Button) findViewById(R.id.add_contact_cancelar);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder db = new AlertDialog.Builder(AddContactActivity.this);
+                db.setTitle("Atenção");
+                db.setMessage("Deseja realmente cancelar a inclusão?");
+
+                db.setNegativeButton(
+                        R.string.no,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                db.setPositiveButton(
+                        R.string.yes,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent i = new Intent(AddContactActivity.this,MainActivity.class);
+                                startActivity(i);
+                            }
+                        });
+
+                AlertDialog alert = db.create();
+                alert.show();
+            }
+        });
 
     }
 
