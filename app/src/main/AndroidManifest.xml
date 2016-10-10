@@ -10,20 +10,28 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddContactActivity" />
+        <activity
+            android:name=".activity.AddContactActivity"
+            android:label="@string/edit_contact" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="9ab5527c4da04f24b381ea6b77dcdb3332767181" />
 
-        <activity android:name=".SearchContactActivity"></activity>
+        <activity
+            android:name=".activity.SearchContactActivity"
+            android:label="@string/search_contact" />
+        <activity
+            android:name=".activity.DevelopedByActivity"
+            android:label="@string/developed_by" />
+        <activity android:name=".activity.ContactsActivity"></activity>
     </application>
 
 </manifest>

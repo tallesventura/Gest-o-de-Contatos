@@ -1,4 +1,4 @@
-package com.talles.android.gestaodecontatos;
+package com.talles.android.gestaodecontatos.activity;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import com.crashlytics.android.Crashlytics;
+import com.talles.android.gestaodecontatos.R;
+
 import io.fabric.sdk.android.Fabric;
 
 
@@ -81,6 +83,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.action_settings) {
             return true;
         }
+        else if(id == R.id.action_search) {
+            Intent i  = new Intent(this,SearchContactActivity.class);
+            startActivity(i);
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -103,7 +109,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //Intent i = new Intent (this,ScheduleActivity.class);
             //startActivity(i);
         }else if(id == R.id.nav_developed_by) {
-
+            Intent i = new Intent(this,DevelopedByActivity.class);
+            startActivity(i);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

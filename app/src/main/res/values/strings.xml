@@ -35,4 +35,6 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="yes">SIM</string>
     <string name="no">NÃO</string>
+    <string name="search_contact">Buscar Contatos</string>
+    <string name="edit_contact">Edição de contato</string>
 </resources>
