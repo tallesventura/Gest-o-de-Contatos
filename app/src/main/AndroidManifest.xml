@@ -31,7 +31,8 @@
         <activity
             android:name=".activity.DevelopedByActivity"
             android:label="@string/developed_by" />
-        <activity android:name=".activity.ContactsActivity"></activity>
+        <activity android:name=".activity.ContactsActivity"
+            android:label="@string/contacts"></activity>
     </application>
 
 </manifest>

@@ -10,9 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.talles.android.gestaodecontatos.Adapter.MyContactRecyclerViewAdapter;
 import com.talles.android.gestaodecontatos.R;
+import com.talles.android.gestaodecontatos.fragment.Support.OnContactListFragmentInteractionListener;
 import com.talles.android.gestaodecontatos.fragment.dummy.DummyContactContent;
-import com.talles.android.gestaodecontatos.fragment.dummy.DummyContactContent.DummyItem;
 
 
 public class FavoritesFragment extends Fragment {
@@ -21,7 +22,7 @@ public class FavoritesFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private OnContactListFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -72,8 +73,8 @@ public class FavoritesFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof OnContactListFragmentInteractionListener) {
+            mListener = (OnContactListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -86,18 +87,4 @@ public class FavoritesFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
-    }
 }

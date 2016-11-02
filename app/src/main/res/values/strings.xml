@@ -37,4 +37,5 @@
     <string name="no">NÃO</string>
     <string name="search_contact">Buscar Contatos</string>
     <string name="edit_contact">Edição de contato</string>
+    <string name="contacts">Contatos</string>
 </resources>
