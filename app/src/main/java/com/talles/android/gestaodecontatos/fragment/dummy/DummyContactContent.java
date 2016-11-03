@@ -25,16 +25,23 @@ public class DummyContactContent {
 
     private static final int COUNT = 10;
 
+    /*
     static {
         // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
             addItem(createDummyItem(i,"Pessoa",5));
         }
     }
+    */
 
-    private static void addItem(DummyItem item) {
+    public static void addItem(DummyItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
+    }
+
+    public static void clearList(){
+        ITEMS.clear();
+        ITEM_MAP.clear();
     }
 
     private static DummyItem createDummyItem(int position, String name, float rating) {

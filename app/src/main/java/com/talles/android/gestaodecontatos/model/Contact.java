@@ -5,6 +5,9 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.DaoException;
+import com.talles.android.gestaodecontatos.dao.DaoSession;
+import com.talles.android.gestaodecontatos.dao.ContactDao;
 
 /**
  * Created by talles on 11/2/16.
@@ -25,25 +28,25 @@ public class Contact {
     @NotNull
     private int phone_type;
 
-    @NotNull
+    @Property
     private String sexo;
 
-    @Property
+    @NotNull
     private String email;
 
-    @Property
+    @NotNull
     private int email_type;
 
     @Property
-    private int affinity;
+    private Float affinity;
 
     public Contact() {
     }
 
-    @Generated(hash = 930342977)
+    @Generated(hash = 1467339939)
     public Contact(Long id, @NotNull String name, @NotNull String phone,
-            int phone_type, @NotNull String sexo, String email, int email_type,
-            int affinity) {
+            int phone_type, String sexo, @NotNull String email, int email_type,
+            Float affinity) {
         this.id = id;
         this.name = name;
         this.phone = phone;
@@ -74,7 +77,7 @@ public class Contact {
         return email;
     }
 
-    public int getAffinity() {
+    public Float getAffinity() {
         return affinity;
     }
 
@@ -98,7 +101,7 @@ public class Contact {
         this.email = email;
     }
 
-    public void setAffinity(int affinity) {
+    public void setAffinity(Float affinity) {
         this.affinity = affinity;
     }
 

@@ -12,8 +12,16 @@ import android.view.ViewGroup;
 
 import com.talles.android.gestaodecontatos.Adapter.MyContactRecyclerViewAdapter;
 import com.talles.android.gestaodecontatos.R;
+import com.talles.android.gestaodecontatos.activity.MainActivity;
+import com.talles.android.gestaodecontatos.dao.ContactDao;
 import com.talles.android.gestaodecontatos.fragment.Support.OnContactListFragmentInteractionListener;
 import com.talles.android.gestaodecontatos.fragment.dummy.DummyContactContent;
+import com.talles.android.gestaodecontatos.model.Contact;
+
+import org.greenrobot.greendao.query.QueryBuilder;
+
+import java.util.Iterator;
+import java.util.List;
 
 
 public class AllContactsFragment extends Fragment {
@@ -64,7 +72,11 @@ public class AllContactsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyContactRecyclerViewAdapter(DummyContactContent.ITEMS, mListener));
+
+            MyContactRecyclerViewAdapter adapter = new MyContactRecyclerViewAdapter(DummyContactContent.ITEMS, mListener);
+            recyclerView.setAdapter(adapter);
+            initContactList();
+
         }
         return view;
     }
@@ -84,7 +96,23 @@ public class AllContactsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        DummyContactContent.clearList();
         mListener = null;
     }
 
+    private void initContactList(){
+        ContactDao contactDao = MainActivity.contactDao;
+        QueryBuilder builder = contactDao.queryBuilder();
+        List contacts = builder.orderAsc(ContactDao.Properties.Name).list();
+
+        Iterator it = contacts.iterator();
+        while (it.hasNext()){
+            Contact c = (Contact) it.next();
+            String name = c.getName();
+            long id = c.getId();
+            float rating = c.getAffinity();
+            DummyContactContent.DummyItem item = new DummyContactContent.DummyItem(id,name,rating);
+            DummyContactContent.addItem(item);
+        }
+    }
 }
