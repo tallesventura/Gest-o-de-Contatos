@@ -12,6 +12,7 @@ import com.talles.android.gestaodecontatos.Adapter.ContactsPagerAdapter;
 import com.talles.android.gestaodecontatos.R;
 import com.talles.android.gestaodecontatos.fragment.Support.OnContactListFragmentInteractionListener;
 import com.talles.android.gestaodecontatos.fragment.dummy.DummyContactContent;
+import com.talles.android.gestaodecontatos.model.Contact;
 
 
 public class ContactsActivity extends AppCompatActivity implements OnContactListFragmentInteractionListener{
@@ -53,7 +54,7 @@ public class ContactsActivity extends AppCompatActivity implements OnContactList
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContactContent.DummyItem item) {
+    public void onListFragmentInteraction(Contact contact) {
 
     }
 

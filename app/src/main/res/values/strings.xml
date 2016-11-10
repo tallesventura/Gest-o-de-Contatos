@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Gestao de Contatos</string>
-    <string name="texto">Gestão de Contatos 1.0</string>
+    <string name="texto">Gestão de Contatos 1.2</string>
     <string name="nome_hint">Nome</string>
     <string name="telefone_hint">Telefone</string>
     <string-array name="telefone_types">
@@ -10,8 +10,8 @@
         <item>Trabalho</item>
     </string-array>
     <string name="sexo">SEXO</string>
-    <string name="masculino">MASCULINO</string>
-    <string name="feminino">FEMININO</string>
+    <string name="masculino">Masculino</string>
+    <string name="feminino">Feminino</string>
     <string name="email">EMAIL</string>
     <string-array name="email_types">
         <item>Pessoal</item>
@@ -38,4 +38,7 @@
     <string name="search_contact">Buscar Contatos</string>
     <string name="edit_contact">Edição de contato</string>
     <string name="contacts">Contatos</string>
+    <string name="send_picture">Enviar foto</string>
+    <string name="camera">Câmera</string>
+    <string name="galery">Galeria</string>
 </resources>

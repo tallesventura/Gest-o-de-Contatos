@@ -12,8 +12,16 @@ import android.view.ViewGroup;
 
 import com.talles.android.gestaodecontatos.Adapter.MyContactRecyclerViewAdapter;
 import com.talles.android.gestaodecontatos.R;
+import com.talles.android.gestaodecontatos.activity.MainActivity;
+import com.talles.android.gestaodecontatos.dao.ContactDao;
 import com.talles.android.gestaodecontatos.fragment.Support.OnContactListFragmentInteractionListener;
 import com.talles.android.gestaodecontatos.fragment.dummy.DummyContactContent;
+import com.talles.android.gestaodecontatos.model.Contact;
+
+import org.greenrobot.greendao.query.QueryBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class FavoritesFragment extends Fragment {
@@ -23,6 +31,7 @@ public class FavoritesFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnContactListFragmentInteractionListener mListener;
+    private List<Contact> contacts;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -64,7 +73,10 @@ public class FavoritesFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyContactRecyclerViewAdapter(DummyContactContent.ITEMS, mListener));
+
+            contacts = initContactList();
+            MyContactRecyclerViewAdapter adapter = new MyContactRecyclerViewAdapter(contacts, mListener);
+            recyclerView.setAdapter(adapter);
         }
         return view;
     }
@@ -85,6 +97,13 @@ public class FavoritesFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private List<Contact> initContactList(){
+
+        ContactDao contactDao = MainActivity.contactDao;
+        QueryBuilder qb = contactDao.queryBuilder();
+        return qb.where(ContactDao.Properties.Affinity.gt(Float.valueOf(3))).orderDesc(ContactDao.Properties.Affinity).list();
     }
 
 }

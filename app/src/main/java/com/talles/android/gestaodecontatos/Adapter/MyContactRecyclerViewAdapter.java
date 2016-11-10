@@ -10,15 +10,16 @@ import android.widget.TextView;
 import com.talles.android.gestaodecontatos.R;
 import com.talles.android.gestaodecontatos.fragment.Support.OnContactListFragmentInteractionListener;
 import com.talles.android.gestaodecontatos.fragment.dummy.DummyContactContent.DummyItem;
+import com.talles.android.gestaodecontatos.model.Contact;
 
 import java.util.List;
 
 public class MyContactRecyclerViewAdapter extends RecyclerView.Adapter<MyContactRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Contact> mValues;
     private final OnContactListFragmentInteractionListener mListener;
 
-    public MyContactRecyclerViewAdapter(List<DummyItem> items, OnContactListFragmentInteractionListener listener) {
+    public MyContactRecyclerViewAdapter(List<Contact> items, OnContactListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -33,8 +34,8 @@ public class MyContactRecyclerViewAdapter extends RecyclerView.Adapter<MyContact
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mNameView.setText(mValues.get(position).name);
-        holder.mRatingBar.setRating(mValues.get(position).rating);
+        holder.mNameView.setText(mValues.get(position).getName());
+        holder.mRatingBar.setRating(mValues.get(position).getAffinity());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +58,7 @@ public class MyContactRecyclerViewAdapter extends RecyclerView.Adapter<MyContact
         public final View mView;
         public final RatingBar mRatingBar;
         public final TextView mNameView;
-        public DummyItem mItem;
+        public Contact mItem;
 
         public ViewHolder(View view) {
             super(view);

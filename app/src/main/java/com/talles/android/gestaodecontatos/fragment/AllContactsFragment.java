@@ -31,6 +31,7 @@ public class AllContactsFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnContactListFragmentInteractionListener mListener;
+    private List<Contact> contacts;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -73,10 +74,9 @@ public class AllContactsFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            MyContactRecyclerViewAdapter adapter = new MyContactRecyclerViewAdapter(DummyContactContent.ITEMS, mListener);
+            contacts = initContactList();
+            MyContactRecyclerViewAdapter adapter = new MyContactRecyclerViewAdapter(contacts, mListener);
             recyclerView.setAdapter(adapter);
-            initContactList();
-
         }
         return view;
     }
@@ -100,19 +100,10 @@ public class AllContactsFragment extends Fragment {
         mListener = null;
     }
 
-    private void initContactList(){
+    private List<Contact> initContactList(){
         ContactDao contactDao = MainActivity.contactDao;
         QueryBuilder builder = contactDao.queryBuilder();
-        List contacts = builder.orderAsc(ContactDao.Properties.Name).list();
+        return builder.orderAsc(ContactDao.Properties.Name).list();
 
-        Iterator it = contacts.iterator();
-        while (it.hasNext()){
-            Contact c = (Contact) it.next();
-            String name = c.getName();
-            long id = c.getId();
-            float rating = c.getAffinity();
-            DummyContactContent.DummyItem item = new DummyContactContent.DummyItem(id,name,rating);
-            DummyContactContent.addItem(item);
-        }
     }
 }

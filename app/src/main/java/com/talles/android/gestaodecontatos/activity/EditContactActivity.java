@@ -1,20 +1,16 @@
 package com.talles.android.gestaodecontatos.activity;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -30,12 +26,9 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.talles.android.gestaodecontatos.R;
 import com.talles.android.gestaodecontatos.dao.ContactDao;
-import com.talles.android.gestaodecontatos.dao.DaoMaster;
-import com.talles.android.gestaodecontatos.dao.DaoSession;
 import com.talles.android.gestaodecontatos.model.Contact;
 
 import java.io.File;
@@ -44,10 +37,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * Created by talles on 8/30/16.
+ * Created by talles on 11/7/16.
  */
 
-public class AddContactActivity  extends AppCompatActivity{
+public class EditContactActivity  extends AppCompatActivity {
 
     private Spinner spinnerTelTypes;
     private Spinner spinnerEmailTypes;
@@ -57,14 +50,13 @@ public class AddContactActivity  extends AppCompatActivity{
     private RadioGroup rdGroupGender;
     private EditText editTxtEmail;
     private RatingBar rtnBarAffinity;
+    private ImageView imViewPhoto;
+    private Long id = null;
+    private String photoPath = "";
     private Bitmap picture = null;
-    private String galery_path = "";
-    private long id = -1;
     private boolean photoFromCamera = false;
     private boolean photoFromGalery = false;
-    private Uri imgUri = null;
 
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 3;
     private static final int CAMERA_REQUEST = 1;
     private static final int GALERY_REQUEST = 2;
 
@@ -73,6 +65,8 @@ public class AddContactActivity  extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contact);
 
+        contactDao = MainActivity.contactDao;
+
         this.spinnerTelTypes = (Spinner) findViewById(R.id.add_contact_tipo_telefone);
         this.spinnerEmailTypes = (Spinner) findViewById(R.id.add_contact_tipo_email);
         this.editTxtName = (EditText) findViewById(R.id.add_contact_nome);
@@ -80,13 +74,7 @@ public class AddContactActivity  extends AppCompatActivity{
         this.editTxtEmail = (EditText) findViewById(R.id.add_contact_email);
         this.rtnBarAffinity = (RatingBar) findViewById(R.id.add_contact_rating);
         this.rdGroupGender = (RadioGroup) findViewById(R.id.add_contact_radioSexo);
-
-        ((RadioButton) findViewById(R.id.add_contact_masculino)).setSelected(true);
-
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
-        contactDao = MainActivity.contactDao;
-
+        this.imViewPhoto = (ImageView) findViewById(R.id.contact_photo);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
@@ -101,27 +89,54 @@ public class AddContactActivity  extends AppCompatActivity{
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         this.spinnerEmailTypes.setAdapter(adapter);
 
+
+        Bundle contact_bundle = getIntent().getExtras();
+        if(contact_bundle != null){
+
+            id = getIntent().getLongExtra("id",-1);
+            Contact c = contactDao.load(id);
+            System.out.println("Tela Edit: " + id);
+
+            String name = c.getName();
+            String phone = c.getPhone();
+            int phoneType = c.getPhone_type();
+            String gender = c.getSexo();
+            String email = c.getEmail();
+            int emailType = c.getEmail_type();
+            float affinity = c.getAffinity();
+            photoPath = c.getPath_photo();
+            picture = getContactPhoto(photoPath);
+
+            editTxtName.setText(name);
+            editTxtPhone.setText(phone);
+            spinnerTelTypes.setSelection(phoneType,true);
+            RadioButton rBtMas = (RadioButton) findViewById(R.id.add_contact_masculino);
+            RadioButton rBtFem = (RadioButton) findViewById(R.id.add_contact_feminino);
+            if(gender.equalsIgnoreCase("Masculino"))
+                rBtMas.setChecked(true);
+            else if(gender.equalsIgnoreCase("Feminino"))
+                rBtFem.setChecked(true);
+
+            editTxtEmail.setText(email);
+            spinnerEmailTypes.setSelection(emailType,true);
+            rtnBarAffinity.setRating(affinity);
+            if(picture != null){
+                imViewPhoto.setImageBitmap(picture);
+            }
+
+        }
+
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+
+
         Button btnSave = (Button) findViewById(R.id.add_contact_salvar);
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                long flag = 0;
-                try {
-                    flag = insertContact();
-                } catch (Exception e) {
-                    new AlertDialog.Builder(AddContactActivity.this).setMessage(e.getMessage()).show();
-                }
-                if (flag >= 0) {
-                    id = flag;
-                    if(photoFromCamera)
-                        updatePhoto(flag);
-                    else if(photoFromGalery)
-                        updatePhoto(flag,galery_path);
-
-                    new AlertDialog.Builder(AddContactActivity.this).setMessage("Contato salvo com sucesso!").show();
-                }else
-                    new AlertDialog.Builder(AddContactActivity.this).setMessage("Falha ao inserir contato!").show();
+                updateContact();
+                new AlertDialog.Builder(EditContactActivity.this).setMessage("Contato salvo com sucesso!").show();
             }
         });
 
@@ -129,7 +144,7 @@ public class AddContactActivity  extends AppCompatActivity{
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder db = new AlertDialog.Builder(AddContactActivity.this);
+                AlertDialog.Builder db = new AlertDialog.Builder(EditContactActivity.this);
                 db.setTitle("Atenção");
                 db.setMessage("Deseja realmente cancelar a inclusão?");
 
@@ -139,7 +154,7 @@ public class AddContactActivity  extends AppCompatActivity{
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
-                                Intent i = new Intent(AddContactActivity.this,AddContactActivity.class);
+                                Intent i = new Intent(EditContactActivity.this,AddContactActivity.class);
                                 startActivity(i);
                             }
                         });
@@ -149,7 +164,7 @@ public class AddContactActivity  extends AppCompatActivity{
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(AddContactActivity.this,MainActivity.class);
+                                Intent i = new Intent(EditContactActivity.this,MainActivity.class);
                                 startActivity(i);
                             }
                         });
@@ -163,7 +178,7 @@ public class AddContactActivity  extends AppCompatActivity{
         btnPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                AlertDialog.Builder db = new AlertDialog.Builder(AddContactActivity.this);
+                AlertDialog.Builder db = new AlertDialog.Builder(EditContactActivity.this);
                 db.setTitle("Envio de foto");
                 db.setMessage("Escolha como deseja enviar a foto");
 
@@ -213,49 +228,24 @@ public class AddContactActivity  extends AppCompatActivity{
     public void getImageFromGalery(Uri imgUri){
 
         String colunas[] = {MediaStore.Images.Media.DATA};
-
-
-
         Cursor cursor = getContentResolver().query(imgUri,colunas,null,null,null);
         cursor.moveToFirst();
         int collumnIndex = cursor.getColumnIndex(colunas[0]);
-        galery_path = cursor.getString(collumnIndex);
+        photoPath = cursor.getString(collumnIndex);
         cursor.close();
 
-        //picture = BitmapFactory.decodeFile(galery_path);
+        picture = BitmapFactory.decodeFile(photoPath);
         ImageView iv = (ImageView) findViewById(R.id.contact_photo);
 
+        /*
         try {
             picture = getBitmapFromUri(imgUri);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        */
         iv.setImageBitmap(picture);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    getImageFromGalery(imgUri);
-
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
     }
 
     @Override
@@ -273,21 +263,8 @@ public class AddContactActivity  extends AppCompatActivity{
                 }
 
                 if(requestCode == GALERY_REQUEST){
-                    imgUri = data.getData();
-                    if (ContextCompat.checkSelfPermission(this,
-                            Manifest.permission.READ_EXTERNAL_STORAGE)
-                            != PackageManager.PERMISSION_GRANTED) {
-
-                        // No explanation needed, we can request the permission.
-
-                        ActivityCompat.requestPermissions(this,
-                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-
-                    }else{
-                        getImageFromGalery(imgUri);
-                    }
-
+                    Uri imgUri = data.getData();
+                    getImageFromGalery(imgUri);
                 }
             }
         }
@@ -315,80 +292,49 @@ public class AddContactActivity  extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    private long insertContact() throws Exception {
+    private Bitmap getContactPhoto(String path){
+        if (path == null || path.length() == 0)
+            return (null);
 
-        Contact contact = new Contact();
-        String name = editTxtName.getText().toString();
-        if(name == null || name.length() < 1){
-            throw new Exception("O campo nome não pode ser vazio");
-        }else{
-            contact.setName(name);
+        Bitmap picture = BitmapFactory.decodeFile(path);
+
+        return picture;
+    }
+
+    public void updateImage(){
+
+
+        FileOutputStream fos = null;
+        File filePath = new File(photoPath);
+        try {
+            fos = new FileOutputStream(filePath);
+            picture.compress(Bitmap.CompressFormat.PNG, 100 /*quality*/, fos);
+            fos.close();
         }
-
-        String phone = editTxtPhone.getText().toString();
-        if(phone == null || phone.trim().length() == 0){
-            throw new Exception("O campo telefone não pode ser vazio");
-        }else{
-            contact.setPhone(phone);
+        catch (Exception ex) {
+            Log.i("DATABASE", "Problem updating picture", ex);
+            photoPath = "";
         }
-
-        contact.setPhone_type(spinnerTelTypes.getSelectedItemPosition());
-
-        RadioButton genderRBtn = (RadioButton) findViewById(rdGroupGender.getCheckedRadioButtonId());
-        String gender = genderRBtn.getText().toString();
-        contact.setSexo(gender);
-
-        String email = editTxtEmail.getText().toString();
-        if(email == null || email.trim().length() == 0){
-            throw new Exception("O campo email não pode ser vazio");
-        }else{
-            contact.setEmail(email);
-        }
-
-        contact.setEmail_type(spinnerEmailTypes.getSelectedItemPosition());
-        contact.setAffinity(rtnBarAffinity.getRating());
-
-        long result =  contactDao.insert(contact);
-
-        Log.d("DaoExample", "Inserted new note, ID: " + contact.getId());
-        return result;
     }
 
     public void updatePhoto(long id){
-        Contact c = contactDao.load(id);
-        if(c != null && picture != null){
 
-            String picturePath = "";
-            File internalStorage = getApplicationContext().getDir("ContactPictures", Context.MODE_PRIVATE);
-            File filePath = new File(internalStorage, id + ".png");
-            picturePath = filePath.toString();
+        photoPath = "";
+        File internalStorage = getApplicationContext().getDir("ContactPictures", Context.MODE_PRIVATE);
+        File filePath = new File(internalStorage, id + ".png");
+        photoPath = filePath.toString();
 
-            FileOutputStream fos = null;
-            try {
-                fos = new FileOutputStream(filePath);
-                picture.compress(Bitmap.CompressFormat.PNG, 100 /*quality*/, fos);
-                fos.close();
-            }
-            catch (Exception ex) {
-                Log.i("DATABASE", "Problem updating picture", ex);
-                picturePath = "";
-            }
-
-            c.setPath_photo(picturePath);
-            contactDao.update(c);
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(filePath);
+            picture.compress(Bitmap.CompressFormat.PNG, 100 /*quality*/, fos);
+            fos.close();
         }
-    }
-
-    public void updatePhoto(long id, String path){
-        Contact c = contactDao.load(id);
-        if (galery_path.length() == 0){
-            c.setPath_photo("");
+        catch (Exception ex) {
+            Log.i("DATABASE", "Problem updating picture", ex);
+            photoPath = "";
         }
 
-        if(c != null){
-            c.setPath_photo(path);
-            contactDao.update(c);
-        }
     }
 
     public void chooseImgFromGalery(View view){
@@ -396,5 +342,31 @@ public class AddContactActivity  extends AppCompatActivity{
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         //i.setType("image/*");
         startActivityForResult(i,GALERY_REQUEST);
+    }
+
+    private void updateContact() {
+
+        Contact contact = new Contact();
+        contact.setId(id);
+        contact.setName(editTxtName.getText().toString());
+        contact.setPhone(editTxtPhone.getText().toString());
+        contact.setPhone_type(spinnerTelTypes.getSelectedItemPosition());
+        int genderId = rdGroupGender.getCheckedRadioButtonId();
+        if(genderId == R.id.add_contact_masculino){
+            contact.setSexo("Masculino");
+        }else if(genderId == R.id.add_contact_feminino){
+            contact.setSexo("Feminino");
+        }
+        contact.setEmail(editTxtEmail.getText().toString());
+        contact.setEmail_type(spinnerEmailTypes.getSelectedItemPosition());
+        contact.setAffinity(rtnBarAffinity.getRating());
+
+        picture = ((BitmapDrawable)imViewPhoto.getDrawable()).getBitmap();
+
+        if(photoFromCamera)
+            updatePhoto(contact.getId());
+
+        contact.setPath_photo(photoPath);
+        contactDao.update(contact);
     }
 }

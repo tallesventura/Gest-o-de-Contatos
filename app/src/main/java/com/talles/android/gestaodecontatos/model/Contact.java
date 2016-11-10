@@ -40,13 +40,16 @@ public class Contact {
     @Property
     private Float affinity;
 
+    @Property
+    private String path_photo;
+
     public Contact() {
     }
 
-    @Generated(hash = 1467339939)
+    @Generated(hash = 1219787585)
     public Contact(Long id, @NotNull String name, @NotNull String phone,
             int phone_type, String sexo, @NotNull String email, int email_type,
-            Float affinity) {
+            Float affinity, String path_photo) {
         this.id = id;
         this.name = name;
         this.phone = phone;
@@ -55,6 +58,7 @@ public class Contact {
         this.email = email;
         this.email_type = email_type;
         this.affinity = affinity;
+        this.path_photo = path_photo;
     }
 
     public Long getId() {
@@ -119,5 +123,18 @@ public class Contact {
 
     public void setEmail_type(int email_type) {
         this.email_type = email_type;
+    }
+
+    @Override
+    public String toString(){
+        return this.name;
+    }
+
+    public String getPath_photo() {
+        return this.path_photo;
+    }
+
+    public void setPath_photo(String path_photo) {
+        this.path_photo = path_photo;
     }
 }
